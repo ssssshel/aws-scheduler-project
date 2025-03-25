@@ -6,13 +6,29 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { AppointmentRepository } from "../../domain/repositories/AppointmentRepository";
 import { Appointment } from "../../domain/models/Appointment";
+import { AppointmentStatus } from "../../domain/enums/AppointmentStatus";
+import { CountryISO } from "../../domain/enums/CountryISO";
 
 export class DynamoDBAppointmentRepository implements AppointmentRepository {
   private client = new DynamoDBClient({});
   private tableName = process.env.DYNAMODB_TABLE_NAME!;
 
   async save(appointment: Appointment): Promise<void> {
-    const command = new PutItemCommand({
+    const queryCommand = new QueryCommand({
+      TableName: this.tableName,
+      IndexName: "ScheduleIdIndex",
+      KeyConditionExpression: "scheduleId = :scheduleId",
+      ExpressionAttributeValues: {
+        ":scheduleId": { N: appointment.scheduleId.toString() },
+      },
+    });
+
+    const result = await this.client.send(queryCommand);
+    if (result.Items && result.Items.length > 0) {
+      throw new Error("Appointment with this scheduleId already exists");
+    }
+
+    const putCommand = new PutItemCommand({
       TableName: this.tableName,
       Item: {
         scheduleId: { N: appointment.scheduleId.toString() },
@@ -20,27 +36,16 @@ export class DynamoDBAppointmentRepository implements AppointmentRepository {
         countryISO: { S: appointment.countryISO },
         status: { S: appointment.status },
       },
-      ConditionExpression: "attribute_not_exists(scheduleId)",
     });
 
-    try {
-      await this.client.send(command);
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.name === "ConditionalCheckFailedException") {
-          throw new Error("Appointment with this scheduleId already exists");
-        }
-        throw error;
-      }
-      throw new Error("An unknown error occurred");
-    }
+    await this.client.send(putCommand);
   }
 
-  async updateStatus(
-    insuredId: string,
-    scheduleId: number,
-    status: string
-  ): Promise<void> {
+  async updateStatus({
+    insuredId,
+    scheduleId,
+    status,
+  }: Appointment): Promise<void> {
     const command = new UpdateItemCommand({
       TableName: this.tableName,
       Key: {
@@ -51,7 +56,14 @@ export class DynamoDBAppointmentRepository implements AppointmentRepository {
       ExpressionAttributeNames: { "#status": "status" },
       ExpressionAttributeValues: { ":status": { S: status } },
     });
-    await this.client.send(command);
+
+    try {
+      await this.client.send(command);
+    } catch (error) {
+      throw error instanceof Error
+        ? error
+        : new Error("An unknown error occurred");
+    }
   }
 
   async getByInsuredId(insuredId: string): Promise<Appointment[]> {
@@ -60,17 +72,24 @@ export class DynamoDBAppointmentRepository implements AppointmentRepository {
       KeyConditionExpression: "insuredId = :insuredId",
       ExpressionAttributeValues: { ":insuredId": { S: insuredId } },
     });
-    const result = await this.client.send(command);
-    return (
-      result.Items?.map(
-        (item) =>
-          new Appointment(
-            item.insuredId.S!,
-            parseInt(item.scheduleId.N!),
-            item.countryISO.S! as "PE" | "CL",
-            item.status.S! as "pending" | "completed"
-          )
-      ) || []
-    );
+
+    try {
+      const result = await this.client.send(command);
+      return (
+        result.Items?.map(
+          (item) =>
+            new Appointment(
+              item.insuredId.S!,
+              parseInt(item.scheduleId.N!),
+              item.countryISO.S! as CountryISO,
+              item.status.S! as AppointmentStatus
+            )
+        ) || []
+      );
+    } catch (error) {
+      throw error instanceof Error
+        ? error
+        : new Error("An unknown error occurred");
+    }
   }
 }

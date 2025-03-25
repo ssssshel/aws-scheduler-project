@@ -2,7 +2,9 @@ import { createPool, Pool } from "mysql2/promise";
 import { AppointmentRepository } from "../../domain/repositories/AppointmentRepository";
 import { Appointment } from "../../domain/models/Appointment";
 
-abstract class BaseMysqlAppointmentRepository implements AppointmentRepository {
+abstract class BaseMysqlAppointmentRepository
+  implements Pick<AppointmentRepository, "save">
+{
   protected pool: Pool;
 
   constructor(dbConfig: {
@@ -24,43 +26,6 @@ abstract class BaseMysqlAppointmentRepository implements AppointmentRepository {
         appointment.countryISO,
         appointment.status,
       ]);
-    } catch (error) {
-      throw error instanceof Error
-        ? error
-        : new Error("An unknown error occurred");
-    }
-  }
-
-  async updateStatus(
-    insuredId: string,
-    scheduleId: number,
-    status: string
-  ): Promise<void> {
-    const sql =
-      "UPDATE appointments SET status = ? WHERE insured_id = ? AND schedule_id = ?";
-    try {
-      await this.pool.execute(sql, [status, insuredId, scheduleId]);
-    } catch (error) {
-      throw error instanceof Error
-        ? error
-        : new Error("An unknown error occurred");
-    }
-  }
-
-  async getByInsuredId(insuredId: string): Promise<Appointment[]> {
-    const sql =
-      "SELECT insured_id, schedule_id, country_iso, status FROM appointments WHERE insured_id = ?";
-    try {
-      const [rows] = await this.pool.execute(sql, [insuredId]);
-      return (rows as any[]).map(
-        (row) =>
-          new Appointment(
-            row.insuredId,
-            row.scheduleId,
-            row.countryISO,
-            row.status
-          )
-      );
     } catch (error) {
       throw error instanceof Error
         ? error

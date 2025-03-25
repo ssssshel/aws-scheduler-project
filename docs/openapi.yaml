@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Medical Appointment API
+  description: API para registrar y obtener citas médicas de asegurados.
+  version: 1.0.0
+
+paths:
+  /appointments:
+    post:
+      summary: Registrar una nueva cita médica.
+      description: Crea una nueva cita médica para un asegurado en el sistema.
+      operationId: registerAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                insuredId:
+                  type: string
+                  description: ID del asegurado.
+                  example: "12345"
+                scheduleId:
+                  type: integer
+                  description: ID del horario de la cita.
+                  example: 1
+                countryISO:
+                  type: string
+                  description: Código ISO del país.
+                  example: "PE"
+      responses:
+        "201":
+          description: "Cita creada exitosamente"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Appointment created"
+        "400":
+          description: "Solicitud inválida"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid request data"
+        "500":
+          description: "Error interno del servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal server error"
+
+  /appointments/{insuredId}:
+    get:
+      summary: Obtener citas de un asegurado.
+      description: Devuelve todas las citas médicas asociadas a un asegurado específico.
+      operationId: getAppointmentsByInsuredId
+      parameters:
+        - name: insuredId
+          in: path
+          required: true
+          description: ID del asegurado.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Lista de citas obtenida correctamente"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    scheduleId:
+                      type: integer
+                      example: 1
+                    status:
+                      type: string
+                      example: "PENDING"
+        "404":
+          description: "Asegurado no encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Insured not found"
+        "500":
+          description: "Error interno del servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal server error"

@@ -1,6 +1,7 @@
 import { RegisterAppointment } from "../../application/use-cases/RegisterAppointment";
 import { GetAppointmentsByInsuredId } from "../../application/use-cases/GetAppointmentsByInsuredId";
 import { AppointmentValidator } from "../validators/AppointmentValidator";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
 export class AppointmentController {
   constructor(
@@ -22,7 +23,7 @@ export class AppointmentController {
 
       await this.registerAppointment.execute(data);
       return {
-        statusCode: 200,
+        statusCode: 201,
         body: JSON.stringify({ message: "Appointment registered" }),
       };
     } catch (error) {
@@ -33,7 +34,10 @@ export class AppointmentController {
     }
   }
 
-  async getAppointments(insuredId: string) {
+  async getAppointments(event: APIGatewayProxyEvent) {
+    const { insuredId } = event.pathParameters || {};
+    if (!insuredId) return { statusCode: 400, body: "Missing insuredId" };
+
     const appointments = await this.getAppointmentsByInsuredId.execute(
       insuredId
     );

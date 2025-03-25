@@ -1,0 +1,21 @@
+{
+  "Records": [
+    {
+      "messageId": "b0463de1-86ba-4294-9ad8-7f45af4185a1",
+      "receiptHandle": "AQEBAZ3un8aywj5mV9pK413IRCGSvoQ1rHCPWK+/tmyGd40LvY9J7QSLQmMTgeEQO+WN2AvM3cK5xCpb+cvV6Xg8Od67bDYZTNFKLyUUfSpBcuP6+ci95JWzGHs+L9Jof0ig+MNZ+mGmMTmFXR8HAVxzvkDIAUsHXn9+rz/zutaIv3lxjooRzVWYQ5610tLSks9lEzW0H1xMWxQiWF4asCmk2zDwyE0/ENMUzvFaXYtTeXHqC/PoZ6R9ZQUH88nAvUS6nmKYPNkl8HVVILWAY1qRwikFu9gaStILQasyqA8QA421NhEZvoQa1hE3ednKJhTr5iXG7tKn8zioZ7p3HoPRJc0G1ugp7nqh2psklRkcxp22FwKjcfTg5rYzrqkm/35inn+ZN3wGp8PEc7yhEx5arQ==",
+      "body": "{\"version\":\"0\",\"id\":\"44fb0e1e-0d12-cfee-5361-c6c80212fcd6\",\"detail-type\":\"AppointmentCompleted\",\"source\":\"appointment.service\",\"account\":\"039650717205\",\"time\":\"2025-03-25T01:58:22Z\",\"region\":\"us-east-1\",\"resources\":[],\"detail\":{\"insuredId\":\"12345\",\"scheduleId\":106,\"countryISO\":\"CL\"}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "AWSTraceHeader": "Root=1-67e20dbd-4b44eb7081aadd375692bf64;Parent=000e5653539c63c7;Sampled=0;Lineage=2:e1ed1915:0",
+        "SentTimestamp": "1742867902660",
+        "SenderId": "AIDAJXNJGGKNS7OSV23OI",
+        "ApproximateFirstReceiveTimestamp": "1742867902674"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "5106d41304de6e70f6636f9bf85ab48f",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:039650717205:sqs_appointment_confirm",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}

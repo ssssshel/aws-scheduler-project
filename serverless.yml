@@ -14,28 +14,20 @@ provider:
         - dynamodb:PutItem
         - dynamodb:GetItem
         - dynamodb:UpdateItem
+        - dynamodb:Query
       Resource:
         - arn:aws:dynamodb:*:*:table/appointments
+        - arn:aws:dynamodb:*:*:table/appointments/index/ScheduleIdIndex
+
     - Effect: Allow
       Action:
         - sns:Publish
       Resource:
         - arn:aws:sns:*:*:appointment_topic
+
     - Effect: Allow
       Action:
-        - sqs:ReceiveMessage
-        - sqs:DeleteMessage
-      Resource:
-        - arn:aws:sqs:*:*:sqs_pe
-        - arn:aws:sqs:*:*:sqs_cl
-        - arn:aws:sqs:*:*:sqs_appointment_confirm
-    - Effect: Allow
-      Action:
-        - events:PutEvents
-      Resource:
-        - arn:aws:events:*:*:event-bus/appointment_bus
-    - Effect: Allow
-      Action:
+        - sqs:SendMessage
         - sqs:ReceiveMessage
         - sqs:DeleteMessage
         - sqs:GetQueueAttributes
@@ -43,6 +35,19 @@ provider:
         - arn:aws:sqs:*:*:sqs_pe
         - arn:aws:sqs:*:*:sqs_cl
         - arn:aws:sqs:*:*:sqs_appointment_confirm
+
+    - Effect: Allow
+      Action:
+        - events:PutEvents
+      Resource:
+        - arn:aws:events:*:*:event-bus/appointment_bus
+
+    - Effect: Allow
+      Action:
+        - events:PutRule
+        - events:PutTargets
+      Resource:
+        - arn:aws:events:*:*:rule/appointment_completed_rule_*
 
 functions:
   Appointment:
@@ -135,11 +140,22 @@ resources:
         TableName: appointments
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
+          - AttributeName: insuredId
+            AttributeType: S
           - AttributeName: scheduleId
             AttributeType: N
         KeySchema:
-          - AttributeName: scheduleId
+          - AttributeName: insuredId
             KeyType: HASH
+          - AttributeName: scheduleId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: ScheduleIdIndex
+            KeySchema:
+              - AttributeName: scheduleId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
     AppointmentTopic:
       Type: AWS::SNS::Topic
       Properties:
@@ -208,6 +224,20 @@ resources:
               Condition:
                 StringEquals:
                   aws:SourceArn: !Ref AppointmentTopic
+    SqsAppointmentConfirmPolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - !Ref SqsAppointmentConfirm
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: events.amazonaws.com
+              Action:
+                - sqs:SendMessage
+              Resource: !GetAtt SqsAppointmentConfirm.Arn
 
 plugins:
   - serverless-offline

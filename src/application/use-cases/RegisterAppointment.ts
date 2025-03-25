@@ -1,3 +1,4 @@
+import { AppointmentStatus } from "../../domain/enums/AppointmentStatus";
 import { Appointment } from "../../domain/models/Appointment";
 import { AppointmentRepository } from "../../domain/repositories/AppointmentRepository";
 import { SnsPublisher } from "../../infraestructure/events/SnsPublisher";
@@ -13,7 +14,7 @@ export class RegisterAppointment {
       data.insuredId,
       data.scheduleId,
       data.countryISO,
-      "pending"
+      AppointmentStatus.PENDING
     );
     await this.repository.save(appointment);
     await this.publisher.publish(appointment);

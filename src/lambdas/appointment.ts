@@ -26,9 +26,7 @@ export const main = async (
       event.resource === "/appointments/{insuredId}" &&
       event.httpMethod === "GET"
     ) {
-      const { insuredId } = event.pathParameters || {};
-      if (!insuredId) return { statusCode: 400, body: "Missing insuredId" };
-      return await appointmentController.getAppointments(insuredId);
+      return await appointmentController.getAppointments(event);
     }
 
     return { statusCode: 404, body: "Not Found" };
