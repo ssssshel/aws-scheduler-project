@@ -14,6 +14,19 @@ const appointmentController = new AppointmentController(
   getAppointmentsByInsuredId
 );
 
+/**
+ * Main entry point for the lambda function.
+ *
+ * Handles the following routes:
+ *
+ * - POST /appointments: Registers a new appointment.
+ * - GET /appointments/{insuredId}: Retrieves the appointments for an insured.
+ *
+ * Returns a 404 error if the route is not recognized.
+ *
+ * @param {APIGatewayProxyEvent} event - The event object passed to the lambda function.
+ * @returns {Promise<APIGatewayProxyResult>} - The response object.
+ */
 export const main = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {

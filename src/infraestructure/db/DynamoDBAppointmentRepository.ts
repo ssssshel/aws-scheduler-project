@@ -13,6 +13,11 @@ export class DynamoDBAppointmentRepository implements AppointmentRepository {
   private client = new DynamoDBClient({});
   private tableName = process.env.DYNAMODB_TABLE_NAME!;
 
+  /**
+   * Saves an appointment to DynamoDB.
+   * @param appointment The appointment to save
+   * @throws {Error} If an appointment with the same scheduleId already exists
+   */
   async save(appointment: Appointment): Promise<void> {
     const queryCommand = new QueryCommand({
       TableName: this.tableName,
@@ -41,6 +46,11 @@ export class DynamoDBAppointmentRepository implements AppointmentRepository {
     await this.client.send(putCommand);
   }
 
+  /**
+   * Updates the status of an appointment in DynamoDB.
+   * @param appointment The appointment with the updated status
+   * @throws {Error} If an error occurs while updating the appointment
+   */
   async updateStatus({
     insuredId,
     scheduleId,
@@ -66,6 +76,12 @@ export class DynamoDBAppointmentRepository implements AppointmentRepository {
     }
   }
 
+  /**
+   * Retrieves all appointments for a given insuredId from DynamoDB.
+   * @param insuredId The insuredId to retrieve appointments for
+   * @returns An array of Appointment objects, or an empty array if none exist
+   * @throws {Error} If an error occurs while retrieving the appointments
+   */
   async getByInsuredId(insuredId: string): Promise<Appointment[]> {
     const command = new QueryCommand({
       TableName: this.tableName,

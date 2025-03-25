@@ -14,7 +14,7 @@ export class AppointmentController {
       if (!eventBody) {
         throw new Error("Missing event body");
       }
-
+      console.log("eventBody", eventBody);
       const data = JSON.parse(eventBody);
       const validationError = AppointmentValidator.validate(data);
       if (validationError) {
@@ -22,6 +22,7 @@ export class AppointmentController {
       }
 
       await this.registerAppointment.execute(data);
+      console.log("Appointment registered");
       return {
         statusCode: 201,
         body: JSON.stringify({ message: "Appointment registered" }),
@@ -41,6 +42,7 @@ export class AppointmentController {
     const appointments = await this.getAppointmentsByInsuredId.execute(
       insuredId
     );
+    console.log("appointments", appointments);
     return { statusCode: 200, body: JSON.stringify(appointments) };
   }
 }

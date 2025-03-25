@@ -16,6 +16,12 @@ abstract class BaseMysqlAppointmentRepository
     this.pool = createPool(dbConfig);
   }
 
+  /**
+   * Saves an appointment to the database.
+   *
+   * @param appointment - The appointment to save
+   * @throws {Error} If an error occurs while saving the appointment
+   */
   async save(appointment: Appointment): Promise<void> {
     const sql =
       "INSERT INTO appointments (insured_id, schedule_id, country_iso, status) VALUES (?, ?, ?, ?)";

@@ -8,6 +8,13 @@ export class EventBridgeNotifier {
   private client = new EventBridgeClient({});
   private eventBusName = process.env.EVENT_BUS_NAME!;
 
+  /**
+   * Sends an event to the EventBridge to notify that an appointment has been completed.
+   *
+   * @param appointment - The appointment object containing details like insuredId, scheduleId, and countryISO.
+   * @throws {Error} If there is an error while sending the event to EventBridge.
+   */
+
   async notifyCompletion(appointment: Appointment): Promise<void> {
     const command = new PutEventsCommand({
       Entries: [
