@@ -95,4 +95,4 @@ npx swagger-ui-watcher docs/openapi.yaml
 ```
 
 O puedes acceder a este enlace (recomendado):
-https://explore.swaggerhub.com/swaggerhub
+https://app.swaggerhub.com/apis/ind-e62/medical-appointment_api/1.0.0
