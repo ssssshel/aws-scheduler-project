@@ -1,0 +1,17 @@
+{
+  "Records": [
+    {
+      "messageId": "08dd9ba9-0346-4488-93dc-3c3293316565",
+      "receiptHandle": "AQEBxI6Rb+/eY7PQexWXme0ueLkvOe5Dk7M3B30Tg6shLaz0ZEtUvwgxEQ5UNwDUxNq+whd9EAtDoiK2P8RC804ABSAKuoG0+fsKfOVUghFxKuel9/pplgOuhQuUEOsi1RBBElA8m03uURRJFE2jS5Gaa/Nax/mju/WEykjWdAiMMxQxZRWWCb1sPoGD03D3+F1wEONXkfg+LznmyKJUByRuL78zxVYExE9Q/fZiYyFq9XX1pcvrFjaJT6zKn02GUo3P/b+QJacI7q2C8+BJyDLXXJ6NU4UACkMicROO7+5sF0cozmmWPaYenyt8fN/KrIyjHfcfi5/52qOCNEeRaCX3mRIgFcZPyIJGp/MVTpcUBcQx16lOdmHr2mtOvi+IkkPA",
+      "body": "{ \"Type\": \"Notification\", \"Message\": \"{\\\"insuredId\\\":\\\"12345\\\",\\\"scheduleId\\\":100,\\\"countryISO\\\":\\\"PE\\\",\\\"status\\\":\\\"pending\\\"}\" }",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1742856730315"
+      },
+      "messageAttributes": {},
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:039650717205:sqs_pe",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}

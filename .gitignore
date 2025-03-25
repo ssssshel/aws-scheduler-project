@@ -1,0 +1,4 @@
+node_modules
+.serverless
+infraestructure/terraform/.terraform
+package-lock.json
