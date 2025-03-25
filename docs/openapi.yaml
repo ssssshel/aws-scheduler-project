@@ -4,6 +4,12 @@ info:
   description: API para registrar y obtener citas médicas de asegurados.
   version: 1.0.0
 
+servers:
+  - url: http://localhost:3000/dev
+    description: Local Environment
+  - url: https://8eqoenlkoe.execute-api.us-east-1.amazonaws.com/dev
+    description: Dev Environment
+
 paths:
   /appointments:
     post:

@@ -8,6 +8,16 @@ provider:
   name: aws
   runtime: nodejs22.x
   region: us-east-1
+  httpApi:
+    cors:
+      allowedOrigins:
+        - "*"
+      allowedMethods:
+        - GET
+        - POST
+        - OPTIONS
+      allowedHeaders:
+        - Content-Type
   iamRoleStatements:
     - Effect: Allow
       Action:
