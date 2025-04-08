@@ -32,6 +32,7 @@ abstract class BaseMysqlAppointmentRepository
         appointment.countryISO,
         appointment.status,
       ]);
+      console.log("Record saved");
     } catch (error) {
       throw error instanceof Error
         ? error

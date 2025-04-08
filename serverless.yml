@@ -74,6 +74,7 @@ functions:
           method: get
   AppointmentPe:
     handler: src/lambdas/appointment_pe.main
+    timeout: 20
     environment:
       EVENT_BUS_NAME: !Ref AppointmentBus
       PE_DB_HOST: mysql-pe.ckfaiew8ufkl.us-east-1.rds.amazonaws.com
@@ -86,6 +87,7 @@ functions:
           batchSize: 5
   AppointmentCl:
     handler: src/lambdas/appointment_cl.main
+    timeout: 20
     environment:
       EVENT_BUS_NAME: !Ref AppointmentBus
       CL_DB_HOST: mysql-cl.ckfaiew8ufkl.us-east-1.rds.amazonaws.com

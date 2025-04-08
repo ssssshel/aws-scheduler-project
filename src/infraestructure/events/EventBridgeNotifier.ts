@@ -32,8 +32,11 @@ export class EventBridgeNotifier {
     });
 
     try {
+      console.log("Sending event to EventBridge");
       await this.client.send(command);
+      console.log("Event sent to EventBridge");
     } catch (error) {
+      console.error("Error sending event to EventBridge:", error);
       throw error instanceof Error
         ? error
         : new Error("An unknown error occurred");
